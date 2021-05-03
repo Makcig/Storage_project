@@ -1,0 +1,986 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema varasto
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema varasto
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `varasto` DEFAULT CHARACTER SET utf8 ;
+USE `varasto` ;
+
+-- -----------------------------------------------------
+-- Table `mydb`.`hyllypaikka`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `varasto`.`hyllypaikka` (
+  `ID_hyllypaikka` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `lokero` VARCHAR(5) NOT NULL,
+  `hylly` INT NOT NULL,
+  `paikka_koko` VARCHAR(5) NOT NULL,
+  PRIMARY KEY (`ID_hyllypaikka`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `varasto`.`tavara`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `varasto`.`tavara` (
+  `ID_tavara` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `tavara_nimi` VARCHAR(80) NOT NULL,
+  `tavara_koko` VARCHAR(5) NOT NULL,
+  `hyllypaikka_ID_hyllypaikka` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`ID_tavara`),
+  INDEX `fk_tavara_hyllypaikka1_idx` (`hyllypaikka_ID_hyllypaikka` ASC),
+  CONSTRAINT `fk_tavara_hyllypaikka1`
+    FOREIGN KEY (`hyllypaikka_ID_hyllypaikka`)
+    REFERENCES `varasto`.`hyllypaikka` (`ID_hyllypaikka`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `varasto`.`meno`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `varasto`.`meno` (
+  `ID_meno` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `määrä` INT NOT NULL,
+  `meno_päivämäärä` DATE NOT NULL,
+  `Käyttäjä` VARCHAR(45) NOT NULL,
+  `tavara_ID_tavara` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`ID_meno`),
+  INDEX `fk_meno_tavara1_idx` (`tavara_ID_tavara` ASC),
+  CONSTRAINT `fk_meno_tavara1`
+    FOREIGN KEY (`tavara_ID_tavara`)
+    REFERENCES `varasto`.`tavara` (`ID_tavara`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `varasto`.`tulo`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `varasto`.`tulo` (
+  `ID_tulo` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `tulo_päivämäärä` DATE NOT NULL,
+  `määrä` INT NOT NULL,
+  `toimittaja` VARCHAR(45) NOT NULL,
+  `tavara_ID_tavara` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`ID_tulo`),
+  INDEX `fk_tulo_tavara1_idx` (`tavara_ID_tavara` ASC),
+  CONSTRAINT `fk_tulo_tavara1`
+    FOREIGN KEY (`tavara_ID_tavara`)
+    REFERENCES `varasto`.`tavara` (`ID_tavara`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `varasto`.`saldo`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `varasto`.`saldo` (
+  `ID_saldo` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `määrä` INT NULL,
+  `tulo_ID_tulo` INT UNSIGNED NOT NULL,
+  `tavara_ID_tavara` INT UNSIGNED NOT NULL,
+  `meno_ID_meno` INT UNSIGNED NOT NULL,
+  PRIMARY KEY (`ID_saldo`),
+  INDEX `fk_saldo_tulo1_idx` (`tulo_ID_tulo` ASC),
+  INDEX `fk_saldo_tavara1_idx` (`tavara_ID_tavara` ASC),
+  INDEX `fk_saldo_meno1_idx` (`meno_ID_meno` ASC),
+  CONSTRAINT `fk_saldo_tulo1`
+    FOREIGN KEY (`tulo_ID_tulo`)
+    REFERENCES `varasto`.`tulo` (`ID_tulo`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_saldo_tavara1`
+    FOREIGN KEY (`tavara_ID_tavara`)
+    REFERENCES `varasto`.`tavara` (`ID_tavara`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `fk_saldo_meno1`
+    FOREIGN KEY (`meno_ID_meno`)
+    REFERENCES `varasto`.`meno` (`ID_meno`)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
+
+-- -----------------------------------------------------
+-- Data for table `varasto`.`hyllypaikka`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `varasto`;
+INSERT INTO `varasto`.`hyllypaikka` (`ID_hyllypaikka`, `lokero`, `hylly`, `paikka_koko_m3`) VALUES (1, 'A1', 1, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A1', 2, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A1', 3, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A1', 4, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A1', 5, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A1', 6, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A1', 7, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A2', 1, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A2', 2, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A2', 3, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A2', 4, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A2', 5, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A2', 6, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A2', 7, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A3', 1, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A3', 2, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A3', 3, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A3', 4, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A3', 5, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A3', 6, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A3', 7, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A4', 1, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A4', 2, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A4', 3, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A4', 4, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A4', 5, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A4', 6, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A4', 7, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A5', 1, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A5', 2, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A5', 3, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A5', 4, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A5', 5, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A5', 6, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A5', 7, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A6', 1, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A6', 2, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A6', 3, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A6', 4, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A6', 5, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A6', 6, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A6', 7, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A7', 1, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A7', 2, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A7', 3, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A7', 4, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A7', 5, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A7', 6, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('A7', 7, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('B1', 1, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('B1', 2, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('B1', 3, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('B1', 4, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('B1', 5, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('B1', 6, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('B1', 7, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('B2', 1, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('B2', 2, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('B2', 3, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('B2', 4, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('B2', 5, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('B2', 6, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('B2', 7, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('B3', 1, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('B3', 2, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('B3', 3, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('B3', 4, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('B3', 5, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('B3', 6, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('B3', 7, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('C1', 1, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('C1', 2, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('C1', 3, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('C1', 4, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('C1', 5, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('C1', 6, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('C1', 7, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('C2', 1, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('C2', 2, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('C2', 3, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('C2', 4, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('C2', 5, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('C2', 6, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('C2', 7, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('C3', 1, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('C3', 2, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('C3', 3, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('C3', 4, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('C3', 5, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('C3', 6, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('C3', 7, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('C4', 1, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('C4', 2, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('C4', 3, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('C4', 4, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('C4', 5, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('C4', 6, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('C4', 7, 'iso');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D1', 1, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D1', 2, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D1', 3, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D1', 4, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D1', 5, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D1', 6, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D1', 7, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D2', 1, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D2', 2, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D2', 3, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D2', 4, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D2', 5, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D2', 6, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D2', 7, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D3', 1, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D3', 2, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D3', 3, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D3', 4, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D3', 5, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D3', 6, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D3', 7, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D4', 1, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D4', 2, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D4', 3, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D4', 4, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D4', 5, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D4', 6, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D4', 7, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D5', 1, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D5', 2, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D5', 3, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D5', 4, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D5', 5, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D5', 6, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D5', 7, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D6', 1, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D6', 2, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D6', 3, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D6', 4, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D6', 5, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D6', 6, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('D6', 7, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E1', 1, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E1', 2, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E1', 3, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E1', 4, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E1', 5, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E1', 6, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E1', 7, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E2', 1, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E2', 2, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E2', 3, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E2', 4, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E2', 5, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E2', 6, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E2', 7, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E3', 1, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E3', 2, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E3', 3, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E3', 4, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E3', 5, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E3', 6, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E3', 7, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E4', 1, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E4', 2, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E4', 3, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E4', 4, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E4', 5, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E4', 6, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E4', 7, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E5', 1, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E5', 2, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E5', 3, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E5', 4, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E5', 5, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E5', 6, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E5', 7, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E6', 1, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E6', 2, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E6', 3, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E6', 4, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E6', 5, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E6', 6, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E6', 7, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E7', 1, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E7', 2, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E7', 3, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E7', 4, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E7', 5, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E7', 6, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E7', 7, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E8', 1, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E8', 2, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E8', 3, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E8', 4, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E8', 5, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E8', 6, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E8', 7, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E9', 1, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E9', 2, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E9', 3, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E9', 4, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E9', 5, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E9', 6, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('E9', 7, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('F1', 1, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('F1', 2, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('F1', 3, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('F1', 4, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('F1', 5, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('F1', 6, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('F1', 7, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('F2', 1, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('F2', 2, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('F2', 3, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('F2', 4, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('F2', 5, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('F2', 6, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('F2', 7, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('F3', 1, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('F3', 2, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('F3', 3, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('F3', 4, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('F3', 5, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('F3', 6, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('F3', 7, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('F4', 1, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('F4', 2, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('F4', 3, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('F4', 4, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('F4', 5, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('F4', 6, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('F4', 7, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G1', 1, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G1', 2, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G1', 3, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G1', 4, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G1', 5, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G1', 6, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G1', 7, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G2', 1, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G2', 2, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G2', 3, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G2', 4, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G2', 5, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G2', 6, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G2', 7, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G3', 1, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G3', 2, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G3', 3, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G3', 4, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G3', 5, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G3', 6, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G3', 7, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G4', 1, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G4', 2, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G4', 3, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G4', 4, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G4', 5, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G4', 6, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G4', 7, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G5', 1, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G5', 2, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G5', 3, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G5', 4, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G5', 5, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G5', 6, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G5', 7, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G6', 1, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G6', 2, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G6', 3, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G6', 4, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G6', 5, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G6', 6, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G6', 7, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G7', 1, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G7', 2, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G7', 3, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G7', 4, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G7', 5, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G7', 6, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G7', 7, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G8', 1, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G8', 2, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G8', 3, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G8', 4, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G8', 5, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G8', 6, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('G8', 7, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H1', 1, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H1', 2, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H1', 3, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H1', 4, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H1', 5, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H1', 6, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H1', 7, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H2', 1, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H2', 2, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H2', 3, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H2', 4, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H2', 5, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H2', 6, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H2', 7, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H3', 1, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H3', 2, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H3', 3, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H3', 4, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H3', 5, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H3', 6, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H3', 7, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H4', 1, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H4', 2, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H4', 3, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H4', 4, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H4', 5, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H4', 6, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H4', 7, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H5', 1, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H5', 2, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H5', 3, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H5', 4, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H5', 5, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H5', 6, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H5', 7, 'keski');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H6', 1, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H6', 2, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H6', 3, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H6', 4, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H6', 5, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H6', 6, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H6', 7, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H7', 1, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H7', 2, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H7', 3, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H7', 4, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H7', 5, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H7', 6, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H7', 7, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H8', 1, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H8', 2, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H8', 3, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H8', 4, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H8', 5, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H8', 6, 'pieni');
+INSERT INTO `varasto`.`hyllypaikka` (`lokero`, `hylly`, `paikka_koko`) VALUES ('H8', 7, 'pieni');
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `varasto`.`tavara`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `varasto`;
+INSERT INTO `varasto`.`tavara` (`ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES (1, 'Poliglecaprone 25 kirurginen ommellanka, steriili', 'pieni', 1);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('CE Iso lanka, steriili', 'pieni', 3);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('KLS Martin TC-lankasakset, käyrät 23 cm', 'pieni', 80);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('KLS Martin TC-lankasakset, käyrät 14,5 cm', 'pieni', 85);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('KLS Martin TC-lankasakset, käyrät 17 cm', 'pieni', 90);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('Lattapihdit, teräs, 11 cm', 'pieni', 110);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('Lattapihdit, teräs, 10 cm', 'pieni', 113);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('Lister sakset teräs, 12 cm', 'pieni', 142);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('TC Lister sakset, teräs, 18 cm', 'pieni', 143);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('KLS Martin supercut metzenbaum sakset, suorat 20,5 cm', 'pieni', 147);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('KLS Martin supercut metzenbaum sakset, käyrät 23 cm', 'pieni', 148);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('KLS Martin metzenbaum sakset, suorat 23 cm', 'pieni', 150);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('Braun Halsted-Mosquito DEL CVD pihdit, teräs, käyrät, 12,5 cm', 'pieni', 170);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('Rongeur Caspar pihdit, teräs, 5 mm, 18 cm', 'pieni', 166);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('Vasara 580 g, 26,5 cm', 'keski', 70);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('Vasara 460 g, 24 cm', 'keski', 75);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('Taylor refleksivasara 320 g, 21 cm', 'keski', 77);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('Braun SERR pinsetit, teräs, suorat, 15 cm', 'pieni', 180);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('Braun Crile CVD pinsetit, teräs, 16 cm', 'pieni', 185);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('Saha, 30 x 10 cm, aikuiselle', 'iso', 52);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('WilTec saha, teräs, 46,5 cm', 'iso', 55);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('KLS Martin Iris sakset, teräs, käyrät, 11,5 cm', 'pieni', 93);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('KLS Martin Ligatura sakset, teräs, käyrät, 18 cm', 'pieni', 95);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('KLS Martin Mayo-Stille sakset, teräs, suorat, 17 cm', 'pieni', 96);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('Silmäveitsi, 9 cm', 'pieni', 280);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('MVR-Lance silmäveitsi, 20 g, 13 cm', 'pieni', 283);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('Quikclot Rolled Gauze side, hemostaattinen, steriili', 'keski', 75);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('Easifix side, 5 cm x 4 m, steriili', 'keski', 76);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('Quikclot EMS side, 4 x 4 cm, steriili', 'keski', 77);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('QuikclotGauze Z-fold side, hemostaattinen, steriili', 'keski', 78);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('Type IIR kasvomaski', 'keski', 65);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('Kasvomaski', 'keski', 67);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('PTFE Coreflon DM 22 neula, steriili', 'pieni', 5);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('Neula ruisku veren, steriili, 3 ml', 'pieni', 7);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('Preretinaalineula, suora, steriili, 5 cm', 'pieni', 8);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('Slo-M insuliiniruisku, 29 g x 12,5 mm, steriili, 0,5 ml', 'pieni', 8);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('Goldenwell käsineet, valkoiset', 'keski', 68);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('EasyFLOW infuusioletku, steriili, 150cm', 'iso', 57);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('PBS särmäisjäteastia,  12 litraa', 'iso', 58);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('Leikkaustakki, steriili', 'iso', 59);
+INSERT INTO `varasto`.`tavara` (`tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka`) VALUES ('Smartone Y-adapteri, epästeriili', 'iso', 60);
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `varasto`.`meno`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `varasto`;
+INSERT INTO `varasto`.`meno` (`ID_meno`, `määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (1, 5, '2021-01-03 10:01:01.222', 'Pekka Vastapäinen', 1);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (2, '2021-01-03 10:01:01.222', 'Pekka Vastapäinen', 2);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (1, '2021-01-03 10:01:01.222', 'Pekka Vastapäinen', 3);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (1, '2021-01-03 11:01:01.222', 'Andre Luska', 4);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (4, '2021-01-03 09:05:01.222', 'Andre Luska', 5);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (2, '2021-01-03 07:01:01.222', 'Andre Luska', 6);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (5, '2021-01-03 15:11:01.222', 'Andre Luska', 7);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (1, '2020-12-03 13:01:01.222', 'Juka Kuosmanen', 8);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (3, '2020-12-03 13:01:01.222', 'Juka Kuosmanen', 9);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (3, '2020-12-03 07:30:01.222', 'Juka Kuosmanen', 10);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (2, '2020-12-03 07:30:01.222', 'Juka Kuosmanen', 11);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (2, '2021-01-03 10:01:01.222', 'Sari Ruotsalainen', 12);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (1, '2021-01-03 10:01:01.222', 'Sari Ruotsalainen', 13);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (1, '2021-02-03 11:01:01.222', 'Juka Mehiläinen', 14);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (4, '2021-02-03 09:05:01.222', 'Juka Mehiläinen', 15);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (2, '2021-02-03 07:01:01.222', 'Juka Mehiläinen', 16);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (5, '2021-02-03 15:11:01.222', 'Juka Mehiläinen', 17);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (1, '2021-01-05 13:01:01.222', 'Pekka Vastapäinen', 18);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (3, '2021-01-05 13:01:01.222', 'Pekka Vastapäinen', 19);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (3, '2021-01-05 07:30:01.222', 'Pekka Vastapäinen', 20);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (2, '2021-01-05 07:30:01.222', 'Pekka Vastapäinen', 21);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (2, '2021-01-12 10:01:01.222', 'Hanna Pendikainen', 22);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (1, '2021-01-12 10:01:01.222', 'Hanna Pendikainen', 23);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (1, '2021-01-12 11:01:01.222', 'Andre Luska', 24);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (4, '2021-01-12 09:05:01.222', 'Andre Luska', 25);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (2, '2021-01-12 07:01:01.222', 'Andre Luska', 26);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (5, '2021-01-02 15:11:01.222', 'Andre Luska', 27);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (1, '2020-12-20 13:01:01.222', 'Jukka Kuosmanen', 28);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (3, '2020-12-20 13:01:01.222', 'Juka Kuosmanen', 29);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (3, '2020-12-20 07:30:01.222', 'Juka Kuosmanen', 30);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (2, '2020-12-20 07:30:01.222', 'Juka Kuosmanen', 31);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (2, '2021-01-11 10:01:01.222', 'Pekka Vastapäinen', 32);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (1, '2021-01-11 10:01:01.222', 'Pekka Vastapäinen', 33);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (1, '2021-01-30 11:01:01.222', 'Andre Kivitalo', 34);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (4, '2021-01-30 09:05:01.222', 'Andre Kivitalo', 35);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (2, '2021-01-30 07:01:01.222', 'Andre Kivitalo', 36);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (5, '2021-01-30 15:11:01.222', 'Andre Kivitalo', 37);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (1, '2021-02-09 13:01:01.222', 'Jonson Welldone', 38);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (3, '2021-02-09 13:01:01.222', 'Jonson Welldone', 39);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (3, '2021-02-09 07:30:01.222', 'Jonson Welldone', 40);
+INSERT INTO `varasto`.`meno` (`määrä`, `meno_päivämäärä`, `Käyttäjä`, `tavara_ID_tavara`) VALUES (2, '2021-02-09 07:30:01.222', 'Jonson Welldone', 41);
+
+
+
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `varasto`.`tulo`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `varasto`;
+INSERT INTO `varasto`.`tulo` (`ID_tulo`, `tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES (1, '2020-04-07 12:30:01.222', 105, 'Pekka Kuljetus Oy', 1);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-04-07 12:30:01.222', 12, 'Pekka Kuljetus Oy', 2);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-04-07 12:30:01.222', 16, 'Pekka Kuljetus Oy', 3);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-04-07 12:30:01.222', 51, 'Pekka Kuljetus Oy', 4);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-12-17 12:30:01.222', 14, 'Väänänen Logistika Oy', 5);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-12-17 12:30:01.222', 25, 'Väänänen Logistika Oy', 6);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-12-17 12:30:01.222', 13, 'Väänänen Logistika Oy', 7);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-12-17 12:30:01.222', 18, 'Väänänen Logistika Oy', 8);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-11-29 12:30:01.222', 24, 'Pekka Kuljetus Oy', 9);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-11-27 12:30:01.222', 33, 'Pekka Kuljetus Oy', 10);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-11-23 12:30:01.222', 80, 'Väänänen Logistika Oy', 11);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-04-07 12:30:01.222', 12, 'Pekka Kuljetus Oy', 12);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-04-07 12:30:01.222', 16, 'Pekka Kuljetus Oy', 13);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-04-07 12:30:01.222', 51, 'Pekka Kuljetus Oy', 14);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-12-17 12:30:01.222', 34, 'Väänänen Logistika Oy', 15);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-12-17 12:30:01.222', 65, 'Väänänen Logistika Oy', 16);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-12-17 12:30:01.222', 13, 'Väänänen Logistika Oy', 17);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-12-17 12:30:01.222', 18, 'Väänänen Logistika Oy', 18);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2021-01-02 12:30:01.222', 24, 'Pekka Kuljetus Oy', 19);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-12-27 12:30:01.222', 33, 'Pekka Kuljetus Oy', 20);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-12-03 12:30:01.222', 80, 'Väänänen Logistika Oy', 21);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-04-07 12:30:01.222', 12, 'Pekka Kuljetus Oy', 22);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-04-07 12:30:01.222', 16, 'Pekka Kuljetus Oy', 23);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-04-07 12:30:01.222', 51, 'Pekka Kuljetus Oy', 24);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-12-17 12:30:01.222', 40, 'Väänänen Logistika Oy', 25);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-12-17 12:30:01.222', 52, 'Väänänen Logistika Oy', 26);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-12-17 12:30:01.222', 13, 'Väänänen Logistika Oy', 27);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-12-17 12:30:01.222', 18, 'Väänänen Logistika Oy', 28);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-11-29 12:30:01.222', 24, 'Pekka Kuljetus Oy', 29);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-12-27 12:30:01.222', 33, 'Pekka Kuljetus Oy', 30);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-12-03 12:30:01.222', 80, 'Väänänen Logistika Oy', 31);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-04-07 12:30:01.222', 12, 'Pekka Kuljetus Oy', 32);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-04-07 12:30:01.222', 16, 'Pekka Kuljetus Oy', 33);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-04-07 12:30:01.222', 51, 'Pekka Kuljetus Oy', 34);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-12-17 12:30:01.222', 41, 'Väänänen Logistika Oy', 35);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-12-17 12:30:01.222', 53, 'Väänänen Logistika Oy', 36);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-12-17 12:30:01.222', 13, 'Väänänen Logistika Oy', 37);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-12-17 12:30:01.222', 18, 'Väänänen Logistika Oy', 38);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-08-29 12:30:01.222', 24, 'Pekka Kuljetus Oy', 39);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-08-27 12:30:01.222', 33, 'Pekka Kuljetus Oy', 40);
+INSERT INTO `varasto`.`tulo` (`tulo_päivämäärä`, `määrä`, `toimittaja`, `tavara_ID_tavara`) VALUES ('2020-07-03 12:30:01.222', 80, 'Väänänen Logistika Oy', 41);
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `varasto`.`saldo`
+-- -----------------------------------------------------
+START TRANSACTION;
+USE `varasto`;
+INSERT INTO `varasto`.`saldo` (`ID_saldo`, `määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 1, 1, 1, 1);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 2, 2, 2);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 3, 3, 3);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 4, 4, 4);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 5, 5, 5);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 6, 6, 6);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 7, 7, 7);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 8, 8, 8);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 9, 9, 9);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 10, 10, 10);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 11, 11, 11);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 12, 12, 12);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 13, 13, 13);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 14, 14, 14);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 15, 15, 15);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 16, 16, 16);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 17, 17, 17);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 18, 18, 18);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 19, 19, 19);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 20, 20, 20);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 21, 21, 21);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 22, 22, 22);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 23, 23, 23);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 24, 24, 24);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 25, 25, 25);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 26, 26, 26);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 27, 27, 27);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 28, 28, 28);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 29, 29, 29);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 30, 30, 30);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 31, 31, 31);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 32, 32, 32);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 33, 33, 33);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 34, 34, 34);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 35, 35, 35);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 36, 36, 36);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 37, 37, 37);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 38, 38, 38);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 39, 39, 39);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 40, 40, 40);
+INSERT INTO `varasto`.`saldo` (`määrä`, `tulo_ID_tulo`, `tavara_ID_tavara`, `meno_ID_meno`) VALUES (1, 41, 41, 41);
+COMMIT;
+
+
+-- -----------------------------------------------------
+-- Data for table `varasto`.`saldo`
+-- -----------------------------------------------------
+
+START TRANSACTION;
+USE `varasto`;
+UPDATE saldo SET määrä =
+(SELECT (SUM((tulo.määrä)-(meno.määrä)))
+FROM tulo, meno
+WHERE tulo.tavara_ID_tavara = meno.tavara_ID_tavara AND saldo.tavara_ID_tavara = tulo.tavara_ID_tavara AND saldo.tavara_ID_tavara = meno.tavara_ID_tavara
+GROUP BY ID_saldo);
+
+COMMIT;
+
+START TRANSACTION;
+USE `varasto`;
+UPDATE `varasto`.`tavara` SET `hyllypaikka_ID_hyllypaikka`='169' WHERE  `ID_tavara`=26;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=26;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `hyllypaikka_ID_hyllypaikka`='114' WHERE  `ID_tavara`=27;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=27;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `hyllypaikka_ID_hyllypaikka`='131' WHERE  `ID_tavara`=28;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=28;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `hyllypaikka_ID_hyllypaikka`='138' WHERE  `ID_tavara`=29;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=29;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `hyllypaikka_ID_hyllypaikka`='126' WHERE  `ID_tavara`=30;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=30;
+UPDATE `varasto`.`tavara` SET `tavara_koko`='iso' WHERE  `ID_tavara`=31;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=31;
+UPDATE `varasto`.`tavara` SET `tavara_koko`='iso' WHERE  `ID_tavara`=32;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=32;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `hyllypaikka_ID_hyllypaikka`='50' WHERE  `ID_tavara`=31;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=31;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `hyllypaikka_ID_hyllypaikka`='53' WHERE  `ID_tavara`=32;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=32;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `hyllypaikka_ID_hyllypaikka`='110' WHERE  `ID_tavara`=33;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=33;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `hyllypaikka_ID_hyllypaikka`='119' WHERE  `ID_tavara`=34;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=34;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `hyllypaikka_ID_hyllypaikka`='129' WHERE  `ID_tavara`=35;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=35;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `hyllypaikka_ID_hyllypaikka`='136' WHERE  `ID_tavara`=36;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=36;
+SHOW CREATE TABLE `varasto`.`hyllypaikka`;
+SELECT * FROM `varasto`.`hyllypaikka` LIMIT 1000;
+SHOW CREATE TABLE `varasto`.`hyllypaikka`;
+SHOW CREATE TABLE `varasto`.`tavara`;
+SELECT * FROM `varasto`.`tavara` LIMIT 1000;
+SHOW CREATE TABLE `varasto`.`tavara`;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `tavara_koko`='iso', `hyllypaikka_ID_hyllypaikka`='69' WHERE  `ID_tavara`=37;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=37;
+UPDATE `varasto`.`tavara` SET `tavara_koko`='keski' WHERE  `ID_tavara`=31;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=31;
+UPDATE `varasto`.`tavara` SET `tavara_koko`='keski' WHERE  `ID_tavara`=32;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=32;
+UPDATE `varasto`.`tavara` SET `tavara_koko`='keski' WHERE  `ID_tavara`=37;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=37;
+SHOW CREATE TABLE `varasto`.`hyllypaikka`;
+SELECT * FROM `varasto`.`hyllypaikka` LIMIT 1000;
+SHOW CREATE TABLE `varasto`.`hyllypaikka`;
+SHOW CREATE TABLE `varasto`.`tavara`;
+SELECT * FROM `varasto`.`tavara` LIMIT 1000;
+SHOW CREATE TABLE `varasto`.`tavara`;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `hyllypaikka_ID_hyllypaikka`='206' WHERE  `ID_tavara`=31;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=31;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `hyllypaikka_ID_hyllypaikka`='215' WHERE  `ID_tavara`=32;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=32;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `hyllypaikka_ID_hyllypaikka`='218' WHERE  `ID_tavara`=37;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=37;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `hyllypaikka_ID_hyllypaikka`='69' WHERE  `ID_tavara`=38;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=38;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `hyllypaikka_ID_hyllypaikka`='83' WHERE  `ID_tavara`=38;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=38;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `hyllypaikka_ID_hyllypaikka`='57' WHERE  `ID_tavara`=20;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=20;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `hyllypaikka_ID_hyllypaikka`='54' WHERE  `ID_tavara`=21;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=21;
+SHOW CREATE TABLE `varasto`.`hyllypaikka`;
+SELECT * FROM `varasto`.`hyllypaikka` LIMIT 1000;
+SHOW CREATE TABLE `varasto`.`hyllypaikka`;
+SHOW CREATE TABLE `varasto`.`tavara`;
+SELECT * FROM `varasto`.`tavara` LIMIT 1000;
+SHOW CREATE TABLE `varasto`.`tavara`;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `hyllypaikka_ID_hyllypaikka`='63' WHERE  `ID_tavara`=15;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=15;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `hyllypaikka_ID_hyllypaikka`='69' WHERE  `ID_tavara`=16;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=16;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `hyllypaikka_ID_hyllypaikka`='51' WHERE  `ID_tavara`=17;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=17;
+SHOW CREATE TABLE `varasto`.`hyllypaikka`;
+SELECT * FROM `varasto`.`hyllypaikka` LIMIT 1000;
+SHOW CREATE TABLE `varasto`.`hyllypaikka`;
+SHOW CREATE TABLE `varasto`.`tavara`;
+SELECT * FROM `varasto`.`tavara` LIMIT 1000;
+SHOW CREATE TABLE `varasto`.`tavara`;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `hyllypaikka_ID_hyllypaikka`='64' WHERE  `ID_tavara`=39;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=39;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `hyllypaikka_ID_hyllypaikka`='86' WHERE  `ID_tavara`=40;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=40;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `hyllypaikka_ID_hyllypaikka`='66' WHERE  `ID_tavara`=41;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=41;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `varasto`.`hyllypaikka`;
+SELECT * FROM `varasto`.`hyllypaikka` LIMIT 1000;
+SHOW CREATE TABLE `varasto`.`hyllypaikka`;
+SHOW CREATE TABLE `varasto`.`tavara`;
+SELECT * FROM `varasto`.`tavara` LIMIT 1000;
+SHOW CREATE TABLE `varasto`.`tavara`;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `varasto`.`hyllypaikka`;
+SELECT * FROM `varasto`.`hyllypaikka` LIMIT 1000;
+SHOW CREATE TABLE `varasto`.`hyllypaikka`;
+SHOW CREATE TABLE `varasto`.`tavara`;
+SELECT * FROM `varasto`.`tavara` LIMIT 1000;
+SHOW CREATE TABLE `varasto`.`tavara`;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `varasto`.`hyllypaikka`;
+SELECT * FROM `varasto`.`hyllypaikka` LIMIT 1000;
+SHOW CREATE TABLE `varasto`.`hyllypaikka`;
+SHOW CREATE TABLE `varasto`.`tavara`;
+SELECT * FROM `varasto`.`tavara` LIMIT 1000;
+SHOW CREATE TABLE `varasto`.`tavara`;
+SHOW CREATE TABLE `varasto`.`hyllypaikka`;
+SELECT * FROM `varasto`.`hyllypaikka` LIMIT 1000;
+SHOW CREATE TABLE `varasto`.`hyllypaikka`;
+SHOW CREATE TABLE `varasto`.`tavara`;
+SELECT * FROM `varasto`.`tavara` LIMIT 1000;
+SHOW CREATE TABLE `varasto`.`tavara`;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `tavara_koko`='keski' WHERE  `ID_tavara`=4;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=4;
+UPDATE `varasto`.`tavara` SET `tavara_koko`='keski' WHERE  `ID_tavara`=5;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=5;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `varasto`.`hyllypaikka`;
+SELECT * FROM `varasto`.`hyllypaikka` LIMIT 1000;
+SHOW CREATE TABLE `varasto`.`hyllypaikka`;
+SHOW CREATE TABLE `varasto`.`tavara`;
+SELECT * FROM `varasto`.`tavara` LIMIT 1000;
+SHOW CREATE TABLE `varasto`.`tavara`;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `tavara_koko`='keski' WHERE  `ID_tavara`=7;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=7;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `tavara_koko`='keski' WHERE  `ID_tavara`=9;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=9;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `tavara_koko`='keski' WHERE  `ID_tavara`=12;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=12;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `tavara_koko`='keski' WHERE  `ID_tavara`=14;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=14;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `tavara_koko`='iso' WHERE  `ID_tavara`=15;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=15;
+UPDATE `varasto`.`tavara` SET `tavara_koko`='iso' WHERE  `ID_tavara`=16;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=16;
+UPDATE `varasto`.`tavara` SET `tavara_koko`='iso' WHERE  `ID_tavara`=17;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=17;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `tavara_koko`='keski' WHERE  `ID_tavara`=19;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=19;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `tavara_koko`='keski' WHERE  `ID_tavara`=23;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=23;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `tavara_koko`='keski' WHERE  `ID_tavara`=24;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=24;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `varasto`.`hyllypaikka`;
+SELECT * FROM `varasto`.`hyllypaikka` LIMIT 1000;
+SHOW CREATE TABLE `varasto`.`hyllypaikka`;
+SHOW CREATE TABLE `varasto`.`tavara`;
+SELECT * FROM `varasto`.`tavara` LIMIT 1000;
+SHOW CREATE TABLE `varasto`.`tavara`;
+UPDATE `varasto`.`tavara` SET `tavara_koko`='pieni' WHERE  `ID_tavara`=27;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=27;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `tavara_koko`='pieni' WHERE  `ID_tavara`=28;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=28;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `tavara_koko`='pieni' WHERE  `ID_tavara`=29;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=29;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+UPDATE `varasto`.`tavara` SET `tavara_koko`='pieni' WHERE  `ID_tavara`=30;
+SELECT `ID_tavara`, `tavara_nimi`, `tavara_koko`, `hyllypaikka_ID_hyllypaikka` FROM `varasto`.`tavara` WHERE  `ID_tavara`=30;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `varasto`.`hyllypaikka`;
+SELECT * FROM `varasto`.`hyllypaikka` LIMIT 1000;
+SHOW CREATE TABLE `varasto`.`hyllypaikka`;
+SHOW CREATE TABLE `varasto`.`tavara`;
+SELECT * FROM `varasto`.`tavara` LIMIT 1000;
+SHOW CREATE TABLE `varasto`.`tavara`;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+SHOW CREATE TABLE `hyllypaikka`;
+SELECT `ID_hyllypaikka`, LEFT(`lokero`, 256) FROM `hyllypaikka` GROUP BY `ID_hyllypaikka` ORDER BY `lokero` LIMIT 1000;
+COMMIT;

@@ -1,0 +1,557 @@
+<!doctype html>
+<title>Varasto</title>
+<html lang="en"></html>
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Jquert & Jquery UI -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/Redmond/jquery-ui.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.js" integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-eOJMYsd53ii+scO/bJGFsiCZc+5NDVN2yr8+0RDqr0Ql0h+rP48ckxlpbzKgwra6" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta3/dist/js/bootstrap.bundle.min.js" integrity="sha384-JEW9xMcG8R+pH31jmWH6WWP0WintQrMb4s7ZOdauHnUtxwoG2vI5DkLtS3qm9Ekf" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
+
+    <!-- Ajax ja css -->
+    <script src="ajax.js"></script>   
+    <link rel="stylesheet" type="text/css" href="index.css" />
+</head>
+
+<body>
+    <!-- Kirjautuminen tapahtuu palvelimella, kun käyttäjä yrittää mennä sivun osoiteseen (tarkeempi readME.txt)-->
+    <!-- <nav class="navbar navbar-expand-md navbar-light">
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <form class="form-inline my-2 my-lg-0 ml-auto">
+                <input type="tunnus" class="form-control mb-2 mr-sm-2" id="tunnus" placeholder="Tunnus" >  <!-- näkyvillä vain, jos ei vielä kirjaunut
+                <input type="password" class="form-control mb-2 mr-sm-2" id="pwd" placeholder="Salasana" visible> <!-- näkyvillä vain, jos ei vielä kirjaunut
+                <button type="button" class="btn mb-2 mr-sm-2 btn-outline-secondary">Kirjaudu</button> <!-- näkyvillä vain, jos ei vielä kirjaunut
+                <!--<button type="button" class="btn mb-2 btn-outline-secondary">Kirjaudu ulos</button> näkyvillä vain, jos on jo kirjautunut       
+            </form>
+        </div>
+    </nav> -->
+    
+    <nav class="navbar2 navbar navbar-light" id="navbar2">
+        <div class="container-fluid">
+            <ul class="nav navbar-nav">
+                <li class="">
+                    <a class="navbar-brand" href="." style="font-weight:bold; color:rgb(165, 112, 42)">KYS-VälineVarasto</a>
+                </li>
+            </ul>
+            <!-- Uusituote ominaisuus ei ole tehty
+            <form class="d-flex"> 
+                <button class="btn btn-success btn-lg" type="button" onclick="UusiTuote()">Uusi tuote</button>
+            </form>-->
+        </div>
+    </nav>
+    
+    <main role="main" class="container-fluid">    
+        <div class="row justify-content-stretch">
+            <!-- Haku kenttä ja navigaatio buttonit -->
+            <div class="col col-xs-7 col-md-11 col-lg-4">
+                <form class="haku">
+                    <!-- Hakukenttä -->
+                    <div class="form-group mb-2">
+                        <fieldset> 
+                            <legend>Haku</legend><hr>
+                            <label class="font-weight-bold mr-3">Etsi tuote:</label>
+                            <div class="btn-group btn-group-toggle" style="margin-bottom: 7px;" data-toggle="buttons">
+                                <label class="btn btn-outline-dark btn-sm" for="numero">
+                                    <input type="radio" class="btn-check" name="options-outlined" id="numero" autocomplete="off" checked>Id:llä
+                                </label>
+
+                                <label class="btn btn-outline-dark btn-sm" for="nimi">
+                                    <input type="radio" class="btn-check" name="options-outlined" id="nimi" autocomplete="off"> Nimellä
+                                </label> 
+
+                            </div>
+                            <input type="num" class="form-control" onkeyup="Haku()" id="opnum" style="font-style: italic" placeholder="Kirjoita hakusana...">
+                        </fieldset>
+                    </div>
+                    <!-- Navigaatio -->
+                    <form class="form-inline my-2 my-lg-0 ml-auto">
+                        <button type="button" id="showPlan" class="btn mb-2 mr-sm-2 btn-outline-warning" style="font-size: 15px;" >TUOTERYHMÄT KARTALLA</button>
+                        <legend>Tuotteet</legend>
+                        <br>
+                    </form>
+                    <div id="tuotteet2">
+                        <table id="tuotteet"></table>
+                    </div>
+                </form>                   
+            </div>
+            <!-- Tuotteen tiedot -->
+            <div class="col col-xs-7 col-md-11 col-lg-8" style="margin-left: -15px;">
+                <legend>Tulos</legend><hr>
+                <table class="table table-striped" id="tulosTable" style="display: none">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nimi</th>
+                            <th>Saldo</th>
+                            <th>Lokero</th>
+                            <th>Hylly</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tab2">
+                        <tr class="table-light">
+                            <td id="id_type"></td>
+                            <td id="tav_nimi"></td>
+                            <td id="saldo"></td>
+                            <td id="lokero"></td>
+                            <td id="hylly"></td>
+                        </tr>  
+                    </tbody>
+                </table>
+                <table class="table table-striped" id="buttonstable"> 
+                    <tbody>
+                        <!-- Tähän tulee Lisää ja Poisto buttonit -->
+                    </tbody>
+                </table>
+                <!-- Karttojen ominaisuudet -->
+                <div>
+                    <div style="width: 950px" class="map1" id="1"> <!-- tuotteen (ID 1) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 691.88798,201.35967 -1.75245,46.29693 -2.63449,106.62242 48.73161,-10e-6 13.42023,-109.15485 -2.32406,-43.77251 z" fill="#378511" description-data="<img src='1.png'>"></path>
+                            <path class="part2" d="m 690.49318,294.05546 h 52.60314 l -2.64489,15.39548 h -51.68295 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planB_2.png" alt="Poliglecaprone 25 kirurginen ommellanka, steriili">
+                    </div>
+                    <div style="width: 950px" class="map2" id="2"> <!-- tuotteen (ID 2) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 747.20398,201.33724 3.61199,47.88799 -16.25398,103.47228 50.56795,-1e-5 21.98718,-105.18255 -3.71707,-46.97564 z" fill="#378511" description-data="<img src='2.png'>"></path>
+                            <path class="part2" d="m 740.74866,308.41819 h 52.17355 l -2.62329,15.39548 h -51.26087 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planB_2.png" alt="CE Iso lanka, steriili">
+                    </div>
+                    <div style="width: 950px" class="map3" id="3"> <!-- tuotteen (ID 3) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 1150.1427,230.46964 -76.7674,0.59613 -59.1404,111.995 5.5091,35.74705 62.1356,-108.82547 77.4037,0.73683 z" fill="#378511" description-data="<img src='3.png'>"></path>
+                            <path class="part2" d="m 1018.2429,334.42898 c 2.1472,17.95414 5.6713,35.30229 5.6713,35.30229 l 6.7869,-12.61542 -5.7882,-36.14089 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planB_2.png" alt="KLS Martin TC-lankasakset, käyrät 23 cm">
+                    </div>
+                    <div style="width: 950px" class="map4" id="4"> <!-- tuotteen (ID 4) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 397.57577,454.15386 c 77.98601,-0.76457 77.98601,-0.76457 77.98601,-0.76457 l -5.35198,53.51981 25.99534,81.04429 h -69.57576 l -35.93473,-80.27972 z" fill="#378511" description-data="<img src='4.png'>"></path>
+                            <path class="part2" d="m 394.19684,520.30448 h 79.66926 l 4.14944,13.27821 h -78.00949 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planA_2.png" alt="KLS Martin TC-lankasakset, käyrät 14,5 cm">
+                    </div>
+                    <div style="width: 950px" class="map5" id="5"> <!-- tuotteen (ID 5) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 475.52587,453.91343 h 79.66926 l -4.14944,54.77261 13.2782,79.66926 -69.71059,-0.82989 -24.89665,-79.66925 z" fill="#378511" description-data="<img src='5.png'>"></path>
+                            <path class="part2" d="m 481.29818,544.36615 75.58429,-0.81076 1.61953,13.2501 -73.30376,0.0199 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planA_2.png" alt="KLS Martin TC-lankasakset, käyrät 17 cm">
+                    </div>
+                    <div style="width: 950px" class="map6" id="6"> <!-- tuotteen (ID 6) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 1177.2723,350.15909 -80.757,0.59613 -65.5239,99.22813 6.307,38.93876 67.7212,-96.05859 81.3933,-0.0611 z" fill="#378511" description-data="<img src='6.png'>"></path>
+                            <path class="part2" d="m 1043.2253,432.06801 c 2.8543,17.92009 7.2507,36.74846 7.2507,36.74846 l 8.8437,-8.92576 -8.2096,-39.33251 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planB_2.png" alt="Lattapihdit, teräs, 11 cm">
+                    </div>
+                    <div style="width: 950px" class="map7" id="7"> <!-- tuotteen (ID 7) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 553.53535,457.23298 78.00948,-0.82989 1.65977,53.11284 -1.65977,79.66926 H 562.66412 L 550.2158,509.51593 z" fill="#378511" description-data="<img src='7.png'>"></path>
+                            <path class="part2" d="m 552.64534,521.84035 78.07075,-0.71174 0.013,11.63181 -76.54508,0.84739 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planA_2.png" alt="Lattapihdit, teräs, 10 cm">
+                    </div>
+                    <div style="width: 950px" class="map8" id="8"> <!-- tuotteen (ID 8) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 1150.1427,230.46964 -76.7674,0.59613 -59.1404,111.995 5.5091,35.74705 62.1356,-108.82547 77.4037,0.73683 z" fill="#378511" description-data="<img src='8.png'>"></path>
+                            <path class="part2" d="m 1025.4243,323.25796 c 2.1472,17.95414 5.6713,35.30229 5.6713,35.30229 l 6.7869,-12.61542 -5.7882,-36.14089 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planB_2.png" alt="	Lister sakset teräs, 12 cm">
+                    </div>
+                    <div style="width: 950px" class="map9" id="9"> <!-- tuotteen (ID 9) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 396.42085,456.86214 h 78.95519 l -6.5796,51.81434 25.49595,81.42254 H 425.2066 l -36.1878,-81.42254 z" fill="#378511" description-data="<img src='9.png'>"></path>
+                            <path class="part2" d="m 419.44945,576.11737 h 70.73069 l 2.46735,9.8694 H 425.2066 Z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planA_2.png" alt="TC Lister sakset, teräs, 18 cm">
+                    </div>
+                    <div style="width: 950px" class="map10" id="10"> <!-- tuotteen (ID 10) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 1150.7531,231.24842 -76.3124,-0.18943 -60.5655,113.36297 5.9017,32.05604 61.1281,-105.14503 78.4011,-0.0574 z" fill="#378511" description-data="<img src='10.png'>"></path>
+                            <path class="part2" d="m 1065.3864,247.12075 c 3.3108,19.16128 6.2841,39.379 6.2841,39.379 l 9.2345,-15.16678 -6.4643,-40.27398 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planB_2.png" alt="KLS Martin supercut metzenbaum sakset, suorat 20,5 cm">
+                    </div>
+                    <div style="width: 950px" class="map11" id="11"> <!-- tuotteen (ID 11) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 1158.5656,269.79448 -77.6606,1.53849 -62.409,108.44333 5.1037,34.44983 65.1178,-104.3471 78.4011,-0.0574 z" fill="#378511" description-data="<img src='11.png'>"></path>
+                            <path class="part2" d="m 1023.2836,371.797 c 2.5798,17.15155 4.8966,35.24874 4.8966,35.24874 l 7.9936,-11.98016 -5.835,-37.64571 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planB_2.png" alt="KLS Martin supercut metzenbaum sakset, käyrät 23 cm">
+                    </div>
+                    <div style="width: 950px" class="map12" id="12"> <!-- tuotteen (ID 12) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 474.61411,452.2735 -76.26783,-0.0199 -7.46899,55.60251 37.34496,80.49914 67.96895,0.0198 -26.47455,-80.51893 z" fill="#378511" description-data="<img src='12.png'>"></path>
+                            <path class="part2" d="m 418.12564,565.09946 h 69.57282 l 3.62359,11.65639 h -68.1234 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planA_2.png" alt="KLS Martin metzenbaum sakset, suorat 23 cm">
+                    </div>
+                    <div style="width: 950px" class="map13" id="13"> <!-- tuotteen (ID 13) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 1036.8562,489.45453 68.8259,-96.35717 79.7154,-0.79793 11.0617,44.59056 -81.4834,0.0574 -72.0751,93.67651 z" fill="#378511" description-data="<img src='13.png'>"></path>
+                            <path class="part2" d="m 1057.5527,461.10479 c 2.5968,19.90834 7.3225,41.7122 7.3225,41.7122 l 8.0459,-13.90573 -6.6711,-41.30271 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planB_2.png" alt="Braun Halsted-Mosquito DEL CVD pihdit, teräs, käyrät, 12,5 cm">
+                    </div>
+                    <div style="width: 950px" class="map14" id="14"> <!-- tuotteen (ID 14) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 552.68633,457.68459 h 75.6654 l 0.82245,132.41443 h -67.4409 l -13.15919,-80.60009 z" fill="#378511" description-data="<img src='14.png'>"></path>
+                            <path class="part2" d="m 557.62103,567.07042 h 71.55315 l 0,10.69185 -69.90825,0 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planA_2.png" alt="Rongeur Caspar pihdit, teräs, 5 mm, 18 cm">
+                    </div>
+                    <div style="width: 950px" class="map15" id="15"> <!-- tuotteen (ID 15) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 247.07661,200.41613 -13.28323,44.68406 53.93084,102.13499 103.6968,0 -45.16297,-102.13499 12.39767,-44.68406 z" fill="#378511" description-data="<img src='15.png'>"></path>
+                            <path class="part2" d="m 242.61249,261.88404 111.5231,-0.84653 6.40691,17.54825 H 251.32123 Z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planB_2.png" alt="Vasara 580 g, 26,5 cm">
+                    </div>
+                    <div style="width: 950px" class="map16" id="16"> <!-- tuotteen (ID 16) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 141.23355,196.42648 100.53914,2.39379 -7.9793,47.87578 45.48199,99.7412 -57.45094,0.79793 -43.88613,-75.00538 h -31.91718 l -15.9586,-28.72547 z" fill="#378511" description-data="<img src='16.png'>"></path>
+                            <path class="part2" d="m 139.63769,261.05878 h 100.53914 l 7.18136,17.55445 h -63.03644 l -6.38344,-7.97929 H 145.2232 Z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planB_2.png" alt="Vasara 460 g, 24 cm">
+                    </div>
+                    <div style="width: 950px" class="map17" id="17"> <!-- tuotteen (ID 17) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 488.05137,199.6182 -5.30394,46.27992 12.4385,107.7205 98.90922,0.79793 2.71281,-41.49234 -5.15678,-113.30601 z" fill="#378511" description-data="<img src='17.png'>"></path>
+                            <path class="part2" d="m 485.89935,277.78838 100.31054,0.80306 1.10213,16.00737 H 488.4563 Z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planB_2.png" alt="Taylor refleksivasara 320 g, 21 cm">
+                    </div>
+                    <div style="width: 950px" class="map18" id="18"> <!-- tuotteen (ID 18) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 1044.0375,527.75515 70.4218,-90.77166 h 82.1092 l 10.2637,46.98435 -84.6751,-0.74053 -71.2771,84.89928 z" fill="#378511" description-data="<img src='18.png'>"></path>
+                            <path class="part2" d="m 1056.7548,511.37436 c 2.5968,19.90834 7.3225,41.7122 7.3225,41.7122 l 8.0459,-9.91608 -7.469,-43.6965 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planB_2.png" alt="Braun SERR pinsetit, teräs, suorat, 15 cm">
+                    </div>
+                    <div style="width: 950px" class="map19" id="19"> <!-- tuotteen (ID 19) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 475.52587,453.91343 h 79.66926 l -4.14944,54.77261 13.2782,79.66926 -69.71059,-0.82989 -24.89665,-79.66925 z" fill="#378511" description-data="<img src='19.png'>"></path>
+                            <path class="part2" d="m 486.31441,565.94832 74.68993,-0.82989 0.82989,11.61844 h -72.20026 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planA_2.png" alt="Braun Crile CVD pinsetit, teräs, 16 cm">
+                    </div>
+                    <div style="width: 950px" class="map20" id="20"> <!-- tuotteen (ID 20) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 377.93707,199.6182 -9.29358,44.68406 26.80123,103.73085 H 495.9498 l -14.84164,-103.73085 6.01423,-44.68406 z" fill="#378511" description-data="<img src='20.png'>"></path>
+                            <path class="part2" d="m 372.63315,260.26086 110.91223,1.59585 1.59585,15.9586 -109.31636,-0.79793 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planB_2.png" alt="Saha, 30 x 10 cm, aikuiselle">
+                    </div>
+                    <div style="width: 950px" class="map21" id="21"> <!-- tuotteen (ID 21) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 141.23355,196.42648 100.53914,2.39379 -7.9793,47.87578 45.48199,99.7412 -57.45094,0.79793 -43.88613,-75.00538 h -31.91718 l -15.9586,-28.72547 z" fill="#378511" description-data="<img src='21.png'>"></path>
+                            <path class="part2" d="m 253.21548,291.38011 6.05151,14.36273 h -61.37951 l -10.37401,-15.16066 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planB_2.png" alt="WilTec saha, teräs, 46,5 cm">
+                    </div>
+                    <div style="width: 950px" class="map22" id="22"> <!-- tuotteen (ID 22) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 77.179591,590.01508 83.818699,0.82988 74.68992,70.54049 8.29889,-42.32429 -72.20027,-75.51982 -81.329029,0.82989 z" fill="#378511" description-data="<img src='22.png'>"></path>
+                            <path class="part2" d="m 230.70889,605.78295 -9.12877,43.98407 9.12877,8.29888 9.12876,-41.49441 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planA_2.png" alt="KLS Martin Iris sakset, teräs, käyrät, 11,5 cm">
+                    </div>
+                    <div style="width: 950px" class="map23" id="23"> <!-- tuotteen (ID 23) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 475.52587,453.91343 h 79.66926 l -4.14944,54.77261 13.2782,79.66926 -69.71059,-0.82989 -24.89665,-79.66925 z" fill="#378511" description-data="<img src='23.png'>"></path>
+                            <path class="part2" d="m 469.71665,507.85616 80.41728,-0.81005 1.72309,13.23852 -77.99092,0.0199 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planA_2.png" alt="KLS Martin Ligatura sakset, teräs, käyrät, 18 cm">
+                    </div>
+                    <div style="width: 950px" class="map24" id="24"> <!-- tuotteen (ID 24) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 474.61411,452.2735 -76.26783,-0.0199 -7.46899,55.60251 37.34496,80.49914 67.96895,0.0198 -26.47455,-80.51893 z" fill="#378511" description-data="<img src='24.png'>"></path>
+                            <path class="part2" d="m 406.59443,542.71731 h 74.97778 l 3.90509,13.26651 h -73.41574 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planA_2.png" alt="KLS Martin Mayo-Stille sakset, teräs, suorat, 17 cm">
+                    </div>
+                    <div style="width: 950px" class="map25" id="25"> <!-- tuotteen (ID 25) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 1037.654,487.06074 67.2301,-93.16545 h 82.1092 l 10.2637,44.59056 -83.8772,0.0574 -69.6812,88.88893 z" fill="#378511" description-data="<img src='25.png'>"></path>
+                            <path class="part2" d="m 1074.8959,435.30736 c 2.1472,20.5365 8.0651,41.97572 8.0651,41.97572 l 9.1807,-13.63198 -8.182,-42.13701 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planB_2.png" alt="Silmäveitsi, 9 cm">
+                    </div>
+                    <div style="width: 950px" class="map26" id="26"> <!-- tuotteen (ID 26) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 1037.654,487.06074 67.2301,-93.16545 h 82.1092 l 10.2637,44.59056 -83.8772,0.0574 -69.6812,88.88893 z" fill="#378511" description-data="<img src='26.png'>"></path>
+                            <path class="part2" d="m 1042.4273,483.13551 c 2.8543,17.92009 6.4528,39.14225 6.4528,39.14225 l 8.0457,-8.92576 -6.6137,-41.7263 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planB_2.png" alt="MVR-Lance silmäveitsi, 20 g, 13 cm">
+                    </div>
+                    <div style="width: 950px" class="map27" id="27"> <!-- tuotteen (ID 27) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 262.36152,231.51086 80.60009,-0.82245 -8.2245,41.94495 41.1225,101.98379 h -72.37559 l -50.9919,-103.62869 z" fill="#378511" description-data="<img src='27.png'>"></path>
+                            <path class="part2" d="m 296.03502,358.13677 72.76699,-0.82614 3.80631,13.22565 -68.85873,0.82645 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planA_2.png" alt="Quikclot Rolled Gauze side, hemostaattinen, steriili">
+                    </div>
+                    <div style="width: 950px" class="map28" id="28"> <!-- tuotteen (ID 28) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 514.53061,228.18387 -5.80922,43.15418 17.42765,101.24635 73.86004,0 v -40.66452 l -6.6391,-103.73601 z" fill="#378511" description-data="<img src='28.png'>"></path>
+                            <path class="part2" d="m 512.87083,300.38414 81.32904,-0.82989 0.82988,16.59776 -80.49914,0 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planA_2.png" alt="Easifix side, 5 cm x 4 m, steriili">
+                    </div>
+                    <div style="width: 950px" class="map29" id="29"> <!-- tuotteen (ID 29) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 428.4964,232.33331 85.53479,-0.82245 -4.11225,41.94495 15.62655,102.80624 H 449.8801 L 423.5617,271.81091 Z" fill="#378511" description-data="<img src='29.png'>"></path>
+                            <path class="part2" d="m 434.25355,317.8681 83.06744,-0.82245 2.46735,14.8041 -81.42254,0.82245 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planA_2.png" alt="Quikclot EMS side, 4 x 4 cm, steriili">
+                    </div>
+                    <div style="width: 950px" class="map30" id="30"> <!-- tuotteen (ID 30) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 513.20874,232.33331 h 81.42254 l 5.75715,111.85319 -0.82245,30.43065 h -74.02049 l -16.449,-101.16134 z" fill="#378511" description-data="<img src='30.png'>"></path>
+                            <path class="part2" d="m 518.10633,319.48669 76.78207,-0.003 0.59746,13.21483 -75.25803,0.003 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planA_2.png" alt="QuikclotGauze Z-fold side, hemostaattinen, steriili">
+                    </div>
+                    <div style="width: 950px" class="map31" id="31"> <!-- tuotteen (ID 31) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 651.4746,439.15616 80.5707,-0.0574 2.62329,51.60511 -11.52589,81.53546 -72.47135,-1e-5 0.17744,-79.14166 z" fill="#378511" description-data="<img src='31.png'>"></path>
+                            <path class="part2" d="m 650.64088,567.28232 h 71.57948 l 1.35337,-9.66638 h -72.25617 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planB_2.png" alt="Type IIR kasvomaski">
+                    </div>
+                    <div style="width: 950px" class="map32" id="32"> <!-- tuotteen (ID 32) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 732.84771,442.30546 82.16656,-0.8553 3.42122,49.21132 -25.09069,79.9396 -73.26928,-10e-6 14.54017,-77.5458 z" fill="#378511" description-data="<img src='32.png'>"></path>
+                            <path class="part2" d="m 732.96018,504.13181 h 82.00352 l 3.41681,-13.42791 h -83.71192 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planB_2.png" alt="Kasvomaski">
+                    </div>
+                    <div style="width: 950px" class="map33" id="33"> <!-- tuotteen (ID 33) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 747.20398,201.33724 3.61199,47.88799 -16.25398,103.47228 50.56795,-1e-5 21.98718,-105.18255 -3.71707,-46.97564 z" fill="#378511" description-data="<img src='33.png'>"></path>
+                            <path class="part2" d="m 746.34825,279.69272 53.40107,-0.79793 -2.64489,14.59755 h -54.07674 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planB_2.png" alt="PTFE Coreflon DM 22 neula, steriili">
+                    </div>
+                    <div style="width: 950px" class="map34" id="34"> <!-- tuotteen (ID 34) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 803.39499,200.57302 3.12909,46.7783 -22.4592,106.11857 48.59495,-1e-5 30.28831,-105.45242 -4.04127,-47.45254 z" fill="#378511" description-data="<img src='34.png'>"></path>
+                            <path class="part2" d="m 805.57052,246.97761 h 57.95502 l -2.91398,15.39548 h -56.94121 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planB_2.png" alt="Neula ruisku veren, steriili, 3 ml">
+                    </div>
+                    <div style="width: 950px" class="map35" id="35"> <!-- tuotteen (ID 35) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 914.62658,202.16147 6.18208,44.21555 -39.40656,108.69597 49.97659,-1e-5 44.88235,-108.80806 -7.17102,-44.11138 z" fill="#378511" description-data="<img src='35.png'>"></path>
+                            <path class="part2" d="m 896.35903,310.01405 h 52.60314 l -3.44282,13.79962 h -53.27881 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planB_2.png" alt="Preretinaalineula, suora, steriili, 5 cm">
+                    </div>
+                    <div style="width: 950px" class="map36" id="36"> <!-- tuotteen (ID 36) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 969.68373,201.36354 7.77794,45.01348 -45.79,107.10011 49.97659,-10e-6 52.06364,-106.41427 -7.9689,-45.70724 z" fill="#378511" description-data="<img src='36.png'>"></path>
+                            <path class="part2" d="m 950.8449,308.82169 h 52.6032 l -5.83665,13.79962 h -52.4809 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planB_2.png" alt="Slo-M insuliiniruisku, 29 g x 12,5 mm, steriili, 0,5 ml">
+                    </div>
+                    <div style="width: 950px" class="map37" id="37"> <!-- tuotteen (ID 37) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 898.38938,438.51227 81.2539,-0.85531 7.81254,54.28578 -50.92196,82.44813 -72.47132,-0.0574 39.57348,-83.30343 z" fill="#378511" description-data="<img src='37.png'>"></path>
+                            <path class="part2" d="m 871.24794,559.403 h 74.41145 l 6.84244,-8.55304 -77.83268,-0.85531 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planB_2.png" alt="">
+                    </div>
+                    <div style="width: 950px" class="map38" id="38"> <!-- tuotteen (ID 38) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 240.57469,393.63097 79.54328,-0.85531 -6.84244,45.33112 48.12653,88.55001 -70.07756,0.0574 -59.4176,-90.08849 z" fill="#378511" description-data="<img src='38.png'>"></path>
+                            <path class="part2" d="m 274.41848,499.2437 72.70085,-0.8553 -5.98713,-11.11896 -75.26675,0.85531 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planB_2.png" alt="Goldenwell käsineet, valkoiset">
+                    </div>
+                    <div style="width: 950px" class="map39" id="39"> <!-- tuotteen (ID 39) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 247.07661,200.41613 -13.28323,44.68406 53.93084,102.13499 103.6968,0 -45.16297,-102.13499 12.39767,-44.68406 z" fill="#378511" description-data="<img src='39.png'>"></path>
+                            <path class="part2" d="m 272.89194,320.10558 106.92258,1.59585 7.18136,14.36274 -106.92257,-0.79793 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planB_2.png" alt="PBS särmäisjäteastia, 12 litraa">
+                    </div>
+                    <div style="width: 950px" class="map40" id="40"> <!-- tuotteen (ID 40) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 82.984685,423.0385 c 59.844725,0.79793 61.440585,1.59586 61.440585,1.59586 l 69.41988,82.18676 11.96894,-74.20746 -63.03644,-88.57019 -60.64265,-1.59586 z" fill="#378511" description-data="<img src='40.png'>"></path>
+                            <path class="part2" d="m 162.77765,344.04347 -18.35238,80.59089 11.17101,13.5648 17.55446,-79.79296 z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planB_2.png" alt="Leikkaustakki, steriili">
+                    </div>
+                    <div style="width: 950px" class="map41" id="41"> <!-- tuotteen (ID 41) kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="m 247.07661,200.41613 -13.28323,44.68406 53.93084,102.13499 103.6968,0 -45.16297,-102.13499 12.39767,-44.68406 z" fill="#378511" description-data="<img src='41.png'>"></path>
+                            <path class="part2" d="m 258.51701,291.37194 107.89558,1.59741 5.43358,15.17548 H 265.50306 Z" fill="#bf2523"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="planB_2.png" alt="Smartone Y-adapteri, epästeriili">
+                    </div>
+                    <div style="width: 950px" class="plan"> <!-- yhteinen kartta-->
+                        <svg version="1.1" preserveAspectRatio="none" viewbox="0 0 1284.6667 874.66669">
+                            <path class="part" d="M 280.55417,480.24357 631.49124,479.479 v -68.04662 h -350.1725 c -0.25486,21.66278 -0.50971,47.14841 -0.76457,68.81119 z" fill="#bf2523" description-data="<img src='G1-4.png'>"></path>
+                            <path class="part" d="m 1087.0674,411.22257 86.3962,-11.46854 65.7529,-0.76456 1.5292,295.12355 h -66.5175 l -85.6317,-37.46387 z" fill="#bf2523" description-data="<img src='Bkaikki.png'>"></path>
+                            <path class="part" d="m 280.55417,480.24357 v 63.45921 l 349.40794,-1.52914 1.52913,-62.69464 z" fill="#256fbf" description-data="<img src='G5-8.png'>"></path>
+                            <path class="part" d="m 49.340485,263.81073 h 87.160845 l 84.10255,36.6993 -3.05827,405.98603 -85.6317,49.69697 -87.160835,-0.76457 z" fill="#25bf93" description-data="<img src='Ekaikki.png'>"></path>
+                            <path class="part" d="m 693.09853,688.5589 448.03727,0.76457 96.3357,43.58042 0.7646,67.28205 -536.72731,-1.52914 -9.17482,-56.57808 z" fill="#bf8725" description-data="<img src='Ckaikki.png'>"></path>
+                            <path class="part" d="m 157.81406,153.78792 424.36381,-0.72124 9.94005,50.48634 v 54.81373 l -358.60653,-2.88492 -77.22656,-37.50414 z" fill="#a525bf" description-data="<img src='Fkaikki.png'>"></path>
+                            <path class="part" d="m 254.2669,688.84854 c 336.39861,-0.78614 336.39861,-3.93065 336.39861,-0.78614 0,3.14453 -0.76447,62.89041 -0.76447,62.89041 l -8.41001,49.52619 -398.32656,1.57226 1.52908,-69.96558 77.21879,-43.23714" fill="#25bfbf" description-data="<img src='Dkaikki.png'>"></path>
+                            <path class="part" d="m 989.64631,476.75062 c 87.15359,0 87.15359,0 87.15359,0 l 0.7645,109.79501 -87.15355,0.77869 z" fill="#bfba25" description-data="<img src='H4-5.png'>"></path>
+                            <path class="part" d="m 826.01403,477.94567 c 163.62865,-0.77541 163.62865,-0.77541 163.62865,-0.77541 l 0.76821,110.10722 -164.39686,3.10161 z" fill="#3b3b37" description-data="<img src='Sekä.png'>"></path>
+                            <path class="part" d="m 867.27303,356.84596 0.76457,-58.10722 43.58042,-34.4056 325.70628,1.52914 0.7646,64.98834 -97.1003,25.99534 z" fill="#3b3b37" description-data="<img src='Sekä.png'>"></path>
+                        </svg>
+                        <div class="description"></div>
+                        <img class="img-fluid" src="plan_yht2.png" alt="plan_yht">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+
+<!-- Formi joka tulee lisäys-ikkunaan -->
+<div id="dialog-add" title="Lisää tuotteita varastoon">
+    <form id="lisaus">
+        <label for="TAVARA_ID_add" class="add_modal">ID: </label>
+        <label name="TAVARA_ID" id="TAVARA_ID_add" value="" class="add_modal"></label>
+        <label for="TAVARA_SALDO_add" class="add_modal" style="text-indent:40px">Varastossa: </label>
+        <label name="TAVARA_SALDO_add" id="TAVARA_SALDO_add" value="" class="remove_modal" style="font-weight: bolder"></label><label class="add_modal" style="text-indent:10px"> kpl</label><p>
+        <label for="TAVARA_NIMI_add" class="add_modal">Tuote: </label>
+        <label name="TAVARA_NIMI_add" id="TAVARA_NIMI_add" value="" class="add_modal"></label><br>
+        <label for="MAARA_add">Määrä</label>
+        <input id="maaraalue" type="text" min="0" name="MAARA" value="" class="form-control">
+        <br><label for="TOIMITTAJA_add">Toimittaja</label>
+        <input id="toimittajaalue" type="text" name="TOIMITTAJA" value="" class="form-control">
+        <!-- Lisää ja Cancel näppäimet tulevat skriptillä ajax.js tiedostossa-->
+    </form>
+</div>
+
+<!-- Formi joka tulee poisto-ikkunaan -->
+<div id="dialog-remove" title="Poista tuotteita varastosta">
+    <form id="poistaminen">
+        <label for="TAVARA_ID_remove" class="remove_modal">ID: </label>
+        <label name="TAVARA_ID" id="TAVARA_ID_remove" value="" class="remove_modal"></label>
+        <label for="TAVARA_SALDO_remove" class="remove_modal" style="text-indent:40px">Varastossa: </label>
+        <label name="TAVARA_SALDO_remove" id="TAVARA_SALDO_remove" value="" class="remove_modal" style="font-weight: bolder"></label><label class="remove_modal" style="text-indent:10px">kpl</label><p>
+        <label for="TAVARA_NIMI_remove" class="remove_modal">Tuote: </label>
+        <label name="TAVARA_NIMI_remove" id="TAVARA_NIMI_remove" value="" class="remove_modal"></label><br>
+        <label for="MAARA_remove">Määrä</label>
+        <input id="poistomaara" type="text" name="POISTOMAARA" min="0" value="" class="form-control" required>
+        <br><label for="VARAAJA_remove">Käyttäjä</label>
+        <input id="kayttaja" type="text" name="KAYTTAJA" value="" class="form-control" required>
+         <!-- Lisää ja Cancel näppäimet tulevat skriptillä ajax.js tiedostossa-->
+    </form>
+</div>
+
+<!-- Toast(popup)-ikkunat, jotka tulee lisäyksen ja poiston jälkeen -->
+<div aria-live="polite" aria-atomic="true" class="position-relative">
+
+    <div class="position-fixed bottom-0 start-50 translate-middle-x p-3" style="z-index: 5">
+        <div id="ToastLisaus" class="toast hide border border-success" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" style="margin: 0 auto;">Tavara onnistuneesti lisätty</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="position-fixed bottom-0 start-50 translate-middle-x p-3" style="z-index: 5">
+        <div id="ToastPoisto" class="toast hide border border-success" role="alert" aria-live="assertive" aria-atomic="true">
+            <div class="d-flex">
+                <div class="toast-body" style="margin: 0 auto;">Tavara onnistuneesti poistettu</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+  
+<!-- Formi joka tulee Uusi Tuote ikkunaan(jatkokehitystä varten) -->
+<!-- <div id="dialog-uusi" title="Lisä uusi tuote" class="text-dark">
+    <form id="uusituoteDialog">
+        <div class="mb-3">
+            <label class="form-label">Nimi:</label>
+            <input id="nimi_uusi" type="text" name="NIMI_uusi" min="0" value="" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label>Koko:</label>
+            <select class="form-select" id="koko_uusi" onchange="haeHyllyt(value);">
+                <option value="ei_valittu" selected>Valitse koko</option>
+                <option value="pieni">Pieni</option>
+                <option value="keski">Keski</option>
+                <option value="iso">Iso</option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label>Määrä</label>
+            <input id="maara_uusu" type="text" name="UUSIMAARA" min="0" value="" class="form-control" required>
+        </div>
+        <div class="mb-3">
+            <label for="">Hylly</label>
+            <select class="form-select" id="hyllypaikka_uusi" disabled></select>
+        </div>
+        <div class="mb-3">
+            <label for="TOIMITTAJA_add">Toimittaja</label>
+            <input id="toimittaja_uusi" type="text" name="TOIMITTAJA" value="" class="form-control">
+        </div>
+    </form>
+</div> -->

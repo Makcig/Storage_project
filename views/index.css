@@ -1,0 +1,116 @@
+    .navbar{
+        background: rgba(216, 231, 179, 0.89);
+        width: 100%;
+        height: 80px;         
+    }
+    .navbar2{
+        background: rgb(219, 211, 91);
+        width: 100%;
+        height: 65px;        
+    }
+    .navlista{
+        font-size: x-large;
+        margin-left: 10px;
+    }
+    
+      
+    .haku > button {
+        padding: 1em;
+        background: rgb(219, 211, 91);
+        border: 0;
+        color: darkkhaki;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    .row{
+        background: beige;        
+    }
+    .col{
+        margin-top: 15px; 
+    }
+    .col > button {
+        padding: 1em;
+        background: rgba(216, 231, 179, 0.89);
+        border: 0;
+        color: darkkhaki;
+        width: 50%;
+        margin-bottom: 15px; 
+    }
+    a{
+        color: black;
+        text-decoration: none;
+    }
+    a:visited {
+        color: black;
+    }
+    .plan, .map1, .map2, .map3, .map4, .map5, .map6, .map7, .map8, .map9,
+    .map10, .map11, .map12, .map13, .map14, .map15, .map16, .map17, .map18,
+    .map19, .map20, .map21, .map22, .map23, .map24, .map25, .map26, .map27,
+    .map28,.map29, .map30, .map31, .map32, .map33, .map34, .map35, .map36,
+    .map37, .map38, .map39, .map40, .map41 {
+        position: relative;
+        text-align: center;
+        display: none;
+        height: auto;
+        max-width: 100%;
+    }
+    svg{
+        position: absolute;
+        height: 100%;
+        width: 100%;
+    }
+    .part{
+        opacity: .4;
+    }
+    .part2{
+        opacity: .5;
+    }
+    .part:hover{
+        transition: opacity .2s ease;
+        opacity: .6;
+        cursor: pointer;
+    }
+    .description{
+        position: absolute;
+        padding: 20px;
+        box-sizing:content-box;
+        width: 300px;
+        height: 100px;
+        right: 0px; 
+        top: 0;    
+    }
+    description-data img {
+        height: auto;
+        max-width: 100%;
+    }
+    #showPlan{
+        color:darkred;
+    }
+
+    /* Tavaran lisäys */
+    .dialog-lisays { 
+        display:none; 
+    }
+    label.add_modal{
+        font-size: 16px;
+    }
+    /* Tavaran poistaminen */
+    .dialog-poistaminen{
+        display:none;
+    }
+    label.remove_modal{
+        font-size: 16px;
+    }
+
+    /* Dialog ikkunoiden tyyli */
+    .ui-dialog-titlebar {
+        background:rgb(219, 211, 91);
+        color:rgb(80, 74, 0);
+    }
+    .error {
+        color: red;
+        font-size: 10px;
+    }
+    .no-close .ui-dialog-titlebar-close {
+        display: none 
+    }

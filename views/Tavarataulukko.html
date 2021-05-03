@@ -1,0 +1,82 @@
+<script>
+    $(document).ready(function () {                                                //Haetaan data tulos-taulukkoon painamalla riviä tuotteet-taulukossa
+        $(function(){
+            $( "#tavarat tbody tr" ).click(function() {
+                $('.plan').hide();
+                $('.description').hide();
+                $('#tulosTable').show();
+                $('#buttonstable').show();
+                document.querySelector('#id_type').innerHTML = $(this).find('td:eq(0)').text();
+                document.querySelector('#tav_nimi').innerHTML = $(this).find('td:eq(1)').text();
+                document.querySelector('#saldo').innerHTML = $(this).find('td:eq(2)').text();
+                document.querySelector('#lokero').innerHTML = $(this).find('td:eq(3)').text();
+                document.querySelector('#hylly').innerHTML = $(this).find('td:eq(4)').text();
+
+                var id_tav = $(this).find('td:eq(0)').text();                             //Otetaan tuotteen ID
+                $('#' + id_tav).show(); $('div[class^="map"]').not('#' + id_tav).hide();  //Näytetään tuotteeseen liittyvä kartta
+                
+                $("#tavarat tbody tr").removeClass("active");                             //Säilytetään valitun rivin väri ja poistetaan, jos valitaan muu rivi
+                $(this).addClass('active');
+                
+                $("#buttonstable tr#btnelements").remove();
+                let   trstr = "<tr id=btnelements><td style='text-align:center;'><input type='button' value='     LISÄÄ     '  id='lisaaBtn' class='btn btn-success' onclick='lisaa(" + id_tav + ")'><td>";
+                        trstr += "<td style='text-align:center;'><input type='button' value='     POISTA     ' id='poistaBtn' class='btn btn-secondary' onclick='poista(" + id_tav + ")'></td></tr>";
+                        
+                $("#buttonstable tbody").append(trstr);
+            });   
+        });
+    });
+</script>
+<style>
+    #tavara:hover td{
+        background: #cecac3; 
+    }
+    #tavara:active td{
+        background: #0dcfe9; 
+    }
+    #tavara.active td{
+        background: #cecac3; 
+    }
+    #tavarat {
+        display: block;
+        max-height: 330px;       
+        width: 100%;      
+        overflow-y: auto; 
+        overflow-x: hidden;
+    }
+    #tavara {
+        cursor: pointer;
+    }  
+    #tavarat td, #tavarat th{
+        padding: 5px;
+    }  
+    #tavarat > tbody tr:nth-child(odd) {
+    background-color: rgba(216, 231, 179, 0.89);/*  */
+    }
+
+    #tavarat > tbody tr:nth-child(even) {
+    background-color: rgba(210, 221, 176, 0.89);/*  */
+    }
+ 
+</style>
+<table id="tavarat">
+    <thead>
+        <th>ID</th>
+        <th>Nimi</th>
+        <th>Saldo</th>
+        <th>Lokero</th>
+        <th>Hylly</th>
+    </thead>
+    <tbody>
+    {{#each Tavarataulukko}}
+        <tr id="tavara">
+            <td>{{this.ID_tavara}}</td>
+            <td>{{this.tavara_nimi}}</td>
+            <td>{{this.määrä}}</td>
+            <td>{{this.lokero}}</td>
+            <td>{{this.hylly}}</td>
+        </tr>
+    {{/each}}
+</tbody>
+</table>
+
